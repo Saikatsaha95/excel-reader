@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import DataTable from "react-data-table-component";
 import XLSX from "xlsx";
+import "./ReadExcel.css";
 
 const ReadExcel = () => {
   const [columns, setColumns] = useState([]);
   const [data, setData] = useState([]);
+  const [file, setFile] = useState("");
 
   const createHeaderAndData = (dt) => {
     console.log("dt: ", dt);
@@ -51,7 +53,10 @@ const ReadExcel = () => {
 
   // upload CSV file
   const handleCsvFile = async (e) => {
-    const file = e.target.files[0];
+    setFile(e.target.files[0]);
+  };
+
+  const handleUpload = async (e) => {
     const arrayBuffer = await file.arrayBuffer();
     const workbook = XLSX.read(arrayBuffer);
     const workSheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -60,12 +65,18 @@ const ReadExcel = () => {
   };
 
   return (
-    <div className="container">
-      <h1 className="mt-3 mb-4">Upload your excel file</h1>
+    <div className="container form-area">
+      <h2 className="mt-3 mb-4 fw-bold">Upload your excel file</h2>
       <input
-        className="mt-3 mb-4 form-control"
+        className="mt-3 mb-2 form-control"
         type="file"
         onChange={(e) => handleCsvFile(e)}
+      />
+      <input
+        className="mb-4 btn btn-primary"
+        type="submit"
+        value="Upload"
+        onClick={handleUpload}
       />
 
       <DataTable pagination highlightOnHover columns={columns} data={data} />
