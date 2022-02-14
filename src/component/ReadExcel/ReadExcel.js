@@ -10,12 +10,16 @@ const ReadExcel = () => {
     console.log("dt: ", dt);
     const csvData = dt.split("\n");
     console.log("csvData: ", csvData);
+
     //creating the columns title
     const headers = csvData[0].split(",");
     console.log(headers);
+
+    //separating the actual data from the headers
     const rows = dt.slice(dt.indexOf("\n") + 1).split("\n");
     console.log(rows);
 
+    //creating an array of objects
     const fileData = [];
     for (let i = 1; i < csvData.length; i++) {
       const row = csvData[i].split(",");
@@ -32,10 +36,9 @@ const ReadExcel = () => {
         fileData.push(obj);
       }
     }
-
     console.log("fileData: ", fileData);
 
-    const columns = headers.map((c) => ({
+    const titles = headers.map((c) => ({
       name: c,
       selector: (row) => row[c],
     }));
@@ -43,7 +46,7 @@ const ReadExcel = () => {
     console.log("columns: ", columns);
 
     setData(fileData);
-    setColumns(columns);
+    setColumns(titles);
   };
 
   // upload CSV file
@@ -55,12 +58,17 @@ const ReadExcel = () => {
     const data = XLSX.utils.sheet_to_csv(workSheet);
     createHeaderAndData(data);
   };
+
   return (
     <div className="container">
-      <h1>This is read excel</h1>
-      <input type="file" onChange={(e) => handleCsvFile(e)} />
+      <h1 className="mt-3 mb-4">Upload your excel file</h1>
+      <input
+        className="mt-3 mb-4 form-control"
+        type="file"
+        onChange={(e) => handleCsvFile(e)}
+      />
 
-      <DataTable highlightOnHover columns={columns} data={data} />
+      <DataTable pagination highlightOnHover columns={columns} data={data} />
     </div>
   );
 };
