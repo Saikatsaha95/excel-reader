@@ -5,12 +5,12 @@ import "./ReadExcel.css";
 
 const ReadExcel = () => {
   const [columns, setColumns] = useState([]);
-  const [data, setData] = useState([]);
+  const [dataset, setDataset] = useState([]);
   const [file, setFile] = useState("");
 
-  const createHeaderAndData = (dt) => {
-    console.log("dt: ", dt);
-    const csvData = dt.split("\n");
+  const createHeaderAndData = (data) => {
+    console.log("dt: ", data);
+    const csvData = data.split("\n");
     console.log("csvData: ", csvData);
 
     //creating the columns title
@@ -18,7 +18,7 @@ const ReadExcel = () => {
     console.log(headers);
 
     //separating the actual data from the headers
-    const rows = dt.slice(dt.indexOf("\n") + 1).split("\n");
+    const rows = data.slice(data.indexOf("\n") + 1).split("\n");
     console.log(rows);
 
     //creating an array of objects
@@ -29,9 +29,9 @@ const ReadExcel = () => {
       if (row.length === headers.length) {
         const obj = {};
         for (let j = 0; j < headers.length; j++) {
-          let d = row[j];
+          let rowValue = row[j];
           if (headers[j]) {
-            obj[headers[j]] = d;
+            obj[headers[j]] = rowValue;
           }
         }
 
@@ -40,14 +40,14 @@ const ReadExcel = () => {
     }
     console.log("fileData: ", fileData);
 
-    const titles = headers.map((c) => ({
-      name: c,
-      selector: (row) => row[c],
+    const titles = headers.map((header) => ({
+      name: header,
+      selector: (row) => row[header],
     }));
 
     console.log("columns: ", columns);
 
-    setData(fileData);
+    setDataset(fileData);
     setColumns(titles);
   };
 
@@ -79,7 +79,7 @@ const ReadExcel = () => {
         onClick={handleUpload}
       />
 
-      <DataTable pagination highlightOnHover columns={columns} data={data} />
+      <DataTable pagination highlightOnHover columns={columns} data={dataset} />
     </div>
   );
 };
